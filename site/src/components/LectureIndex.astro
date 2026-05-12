@@ -99,6 +99,13 @@ const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
     padding: 0 1.25rem;
   }
 
+  /* Reset Starlight's default :not(:first-child) margin-top on flow content.
+     Without this, the FIRST card has margin-top: 0 while siblings have
+     margin-top: 1rem → first card sits 16px higher than the rest of its row. */
+  .lecture-grid > .lecture-card {
+    margin: 0 !important;
+  }
+
   .lecture-card {
     display: flex;
     flex-direction: column;
