@@ -2,7 +2,7 @@
 
 > 國立臺灣大學 **李宏毅老師** 2026 年《AI Agent / Harness Engineering / Self-Correction》系列課程之 **AI 自動生成學習筆記**。
 >
-> 線上閱讀：<https://tony85314.github.io/li-hung-yi-ai-agent-2026/>
+> 線上閱讀：<https://fireman333.github.io/li-hung-yi-ai-agent-2026/>
 >
 > 原始播放清單：<https://www.youtube.com/playlist?list=PLJV_el3uVTsMOzDAUQ0cj9oLqEnqTSBkl>
 

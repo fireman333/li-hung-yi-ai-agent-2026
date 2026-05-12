@@ -7,7 +7,7 @@ import rehypeKatex from 'rehype-katex';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://tony85314.github.io',
+  site: 'https://fireman333.github.io',
   base: '/li-hung-yi-ai-agent-2026',
   integrations: [
     starlight({
@@ -19,7 +19,7 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/tony85314/li-hung-yi-ai-agent-2026',
+          href: 'https://github.com/fireman333/li-hung-yi-ai-agent-2026',
         },
         {
           icon: 'youtube',
