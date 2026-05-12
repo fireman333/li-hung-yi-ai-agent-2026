@@ -6,35 +6,73 @@ const lectures = entries
   .filter((e) => typeof e.data.lectureNumber === 'number' && e.id !== 'index')
   .sort((a, b) => (a.data.lectureNumber ?? 0) - (b.data.lectureNumber ?? 0));
 
-const fmtDate = (d?: Date) =>
-  d ? d.toISOString().slice(0, 10) : '';
+const fmtDate = (d?: Date) => (d ? d.toISOString().slice(0, 10) : '');
+
+const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
 ---
 
 <section class="lecture-grid">
   {lectures.map((lec) => {
     const num = lec.data.lectureNumber!;
     const slug = lec.id;
-    const href = import.meta.env.BASE_URL.replace(/\/$/, '') + '/' + slug + '/';
+    const href = baseUrl + '/' + slug + '/';
     const dur = lec.data.durationMin;
     const read = lec.data.readingMin;
     const youtube = lec.data.videoUrl;
     const date = fmtDate(lec.data.uploadedAt as Date | undefined);
     return (
       <article class="lecture-card">
-        <div class="lecture-badge">Lec {String(num).padStart(2, '0')}</div>
+        <div class="lecture-card-header">
+          <span class="lecture-badge">Lec {String(num).padStart(2, '0')}</span>
+        </div>
         <h3 class="lecture-title">
           <a href={href}>{lec.data.title}</a>
         </h3>
-        <p class="lecture-meta">
-          {dur ? <span>⏱ 影片 {dur} 分</span> : null}
-          {read ? <span>📖 閱讀 {read} 分</span> : null}
-          {date ? <span>🗓 {date}</span> : null}
-        </p>
+        <dl class="lecture-meta">
+          {dur ? (
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9" />
+                <path d="M12 7v5l3 2" />
+              </svg>
+              <dt class="meta-label">影片</dt>
+              <dd class="meta-value">{dur} 分</dd>
+            </div>
+          ) : null}
+          {read ? (
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M4 5a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v14H6a2 2 0 0 1-2-2V5z" />
+                <path d="M4 19a2 2 0 0 0 2 2h14" />
+              </svg>
+              <dt class="meta-label">閱讀</dt>
+              <dd class="meta-value">{read} 分</dd>
+            </div>
+          ) : null}
+          {date ? (
+            <div class="meta-item">
+              <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="3" y="5" width="18" height="16" rx="2" />
+                <path d="M3 9h18M8 3v4M16 3v4" />
+              </svg>
+              <dd class="meta-value meta-date">{date}</dd>
+            </div>
+          ) : null}
+        </dl>
         <div class="lecture-actions">
-          <a class="cta-primary" href={href}>閱讀講義 →</a>
+          <a class="cta-primary" href={href}>
+            閱讀講義
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </a>
           {youtube ? (
-            <a class="cta-secondary" href={youtube} target="_blank" rel="noopener">
-              ▶ YouTube
+            <a class="cta-secondary" href={youtube} target="_blank" rel="noopener" aria-label="到 YouTube 看原片">
+              <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                <path d="M21.6 7.2a2.5 2.5 0 0 0-1.76-1.77C18.27 5 12 5 12 5s-6.27 0-7.84.43A2.5 2.5 0 0 0 2.4 7.2 26.2 26.2 0 0 0 2 12a26.2 26.2 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.76 1.77C5.73 19 12 19 12 19s6.27 0 7.84-.43a2.5 2.5 0 0 0 1.76-1.77A26.2 26.2 0 0 0 22 12a26.2 26.2 0 0 0-.4-4.8z" />
+                <path fill="#fff" d="M10 15V9l5 3z" />
+              </svg>
+              <span>YouTube</span>
             </a>
           ) : null}
         </div>
@@ -44,92 +82,181 @@ const fmtDate = (d?: Date) =>
 </section>
 
 {lectures.length === 0 ? (
-  <p class="empty-state">尚未匯入講義。請先把 <code>lectures/*.md</code> 補上 frontmatter（執行 <code>node scripts/migrate-frontmatter.mjs</code>）。</p>
+  <p class="empty-state">
+    尚未匯入講義。請在 <code>lectures/</code> 加 markdown 並執行 <code>node scripts/migrate-frontmatter.mjs</code>。
+  </p>
 ) : null}
 
 <style>
   .lecture-grid {
     display: grid;
-    gap: 1.25rem;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    margin: 2rem auto;
+    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-auto-rows: 1fr;
+    align-items: stretch;
+    margin: 2.5rem auto 4rem;
     max-width: 1200px;
-    padding: 0 1rem;
+    padding: 0 1.25rem;
   }
+
   .lecture-card {
-    border: 1px solid var(--sl-color-gray-5);
-    border-radius: 0.5rem;
-    padding: 1.25rem;
-    background: var(--sl-color-bg-nav);
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
-    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    gap: 0.85rem;
+    height: 100%;
+    padding: 1.5rem 1.4rem 1.4rem;
+    background: var(--sl-color-bg-nav);
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
   }
+
   .lecture-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    transform: translateY(-3px);
+    border-color: var(--sl-color-accent);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
   }
+
+  .lecture-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   .lecture-badge {
-    align-self: flex-start;
-    font-size: 0.85rem;
+    display: inline-block;
+    font-size: 0.78rem;
     font-weight: 700;
-    color: var(--sl-color-accent);
+    letter-spacing: 0.05em;
+    color: var(--sl-color-accent-high);
     background: var(--sl-color-accent-low);
-    padding: 0.15rem 0.5rem;
-    border-radius: 0.25rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
   }
+
   .lecture-title {
     margin: 0;
-    font-size: 1.1rem;
-    line-height: 1.4;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    font-weight: 600;
   }
+
   .lecture-title a {
     color: var(--sl-color-white);
     text-decoration: none;
   }
+
   .lecture-title a:hover {
-    color: var(--sl-color-accent);
+    color: var(--sl-color-text-accent);
   }
+
   .lecture-meta {
-    font-size: 0.85rem;
-    color: var(--sl-color-gray-3);
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-wrap: wrap;
-    gap: 0.75rem;
-    margin: 0.25rem 0 0.75rem;
+    gap: 0.4rem 1rem;
+    font-size: 0.82rem;
+    color: var(--sl-color-gray-3);
   }
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .meta-icon {
+    width: 0.95rem;
+    height: 0.95rem;
+    color: var(--sl-color-gray-3);
+    flex-shrink: 0;
+  }
+
+  .meta-label,
+  .meta-value {
+    margin: 0;
+    display: inline;
+  }
+
+  .meta-label::after {
+    content: ' ';
+  }
+
+  .meta-value {
+    font-variant-numeric: tabular-nums;
+  }
+
+  .meta-date {
+    font-feature-settings: 'tnum';
+  }
+
   .lecture-actions {
     margin-top: auto;
+    padding-top: 0.5rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.6rem;
     flex-wrap: wrap;
   }
+
   .cta-primary,
   .cta-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     text-decoration: none;
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-    border-radius: 0.3rem;
-    transition: background 0.15s ease;
+    font-size: 0.88rem;
+    font-weight: 500;
+    padding: 0.45rem 0.9rem;
+    border-radius: 0.4rem;
+    transition: background 0.15s ease, transform 0.1s ease;
   }
+
   .cta-primary {
     background: var(--sl-color-accent);
     color: var(--sl-color-black);
   }
+
   .cta-primary:hover {
     background: var(--sl-color-accent-high);
+    color: var(--sl-color-black);
   }
+
+  .cta-primary svg {
+    width: 0.9rem;
+    height: 0.9rem;
+  }
+
   .cta-secondary {
     border: 1px solid var(--sl-color-gray-5);
-    color: var(--sl-color-white);
+    color: var(--sl-color-text);
   }
+
   .cta-secondary:hover {
+    border-color: var(--sl-color-gray-3);
     background: var(--sl-color-gray-6);
   }
+
+  .cta-secondary svg {
+    width: 1rem;
+    height: 1rem;
+    color: #ff0000;
+  }
+
   .empty-state {
     text-align: center;
     padding: 3rem 1rem;
     color: var(--sl-color-gray-3);
+  }
+
+  @media (max-width: 600px) {
+    .lecture-grid {
+      grid-template-columns: 1fr;
+      padding: 0 1rem;
+    }
+    .lecture-card {
+      padding: 1.25rem;
+    }
   }
 </style>

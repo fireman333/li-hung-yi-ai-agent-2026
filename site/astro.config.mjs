@@ -13,6 +13,10 @@ export default defineConfig({
     starlight({
       title: '李宏毅 AI Agent 2026 課程筆記',
       description: '李宏毅老師 2026 年 AI Agent / Harness Engineering / Self-Correction 系列課程之 AI 自動生成學習筆記',
+      logo: {
+        src: './src/assets/logo.svg',
+        alt: '課程筆記',
+      },
       defaultLocale: 'zh-tw',
       locales: { 'zh-tw': { label: '繁體中文', lang: 'zh-TW' } },
       social: [
