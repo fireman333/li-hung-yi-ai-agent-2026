@@ -4,6 +4,49 @@ import starlight from '@astrojs/starlight';
 import rehypeMermaid from 'rehype-mermaid';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import { readdirSync, readFileSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { resolve, dirname } from 'node:path';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const LECTURES_DIR = resolve(__dirname, '../lectures');
+
+/**
+ * Generate Starlight sidebar items by reading lectures/*.md at build time.
+ *
+ * Starlight's `autogenerate: { directory: '.' }` only walks the physical
+ * `src/content/docs/` tree. Since our docs collection uses a glob loader
+ * pointing at `../lectures/`, autogenerate yields an empty list.
+ *
+ * This function reads the same lectures/ directory at config-load time and
+ * emits explicit `{ label, slug }` items, preserving "drop new .md → sidebar
+ * auto-updates" extensibility without a custom plugin.
+ */
+function loadLectureSidebar() {
+  const files = readdirSync(LECTURES_DIR)
+    .filter((f) => /^\d+_.+\.md$/.test(f))
+    .sort();
+
+  return files.map((f) => {
+    const slug = f.replace(/\.md$/, '');
+    const content = readFileSync(resolve(LECTURES_DIR, f), 'utf8');
+
+    // Lightweight YAML frontmatter parsing — only title + lectureNumber.
+    // Avoid adding gray-matter as a dependency for this small need.
+    const titleMatch = content.match(/^title:\s*["']?(.+?)["']?\s*$/m);
+    const numMatch = content.match(/^lectureNumber:\s*(\d+)\s*$/m);
+
+    const num = numMatch ? numMatch[1].padStart(2, '0') : '??';
+    let title = titleMatch ? titleMatch[1].trim() : slug;
+    // Truncate long titles to keep sidebar narrow.
+    if (title.length > 28) title = title.slice(0, 27) + '…';
+
+    return {
+      label: `Lec ${num} · ${title}`,
+      slug,
+    };
+  });
+}
 
 // https://astro.build/config
 export default defineConfig({
@@ -38,7 +81,7 @@ export default defineConfig({
       sidebar: [
         {
           label: '所有講義',
-          items: [{ autogenerate: { directory: '.' } }],
+          items: loadLectureSidebar(),
         },
       ],
       customCss: ['./src/styles/global.css'],
