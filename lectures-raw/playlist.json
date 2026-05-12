@@ -1,0 +1,72 @@
+[
+  {
+    "index": 1,
+    "video_id": "2rcJdFuNbZQ",
+    "title": "解剖小龍蝦 — 以 OpenClaw 為例介紹 AI Agent 的運作原理",
+    "duration": 4997,
+    "url": "https://www.youtube.com/watch?v=2rcJdFuNbZQ"
+  },
+  {
+    "index": 2,
+    "video_id": "urwDLyNa9FU",
+    "title": "AI Agent (1/3)：核心技術 Context Engineering 基本概念解說",
+    "duration": 3186,
+    "url": "https://www.youtube.com/watch?v=urwDLyNa9FU"
+  },
+  {
+    "index": 3,
+    "video_id": "mmPmNezjCi0",
+    "title": "AI Agent (2/3): AI Agent 之間可以有什麼樣的互動",
+    "duration": 1349,
+    "url": "https://www.youtube.com/watch?v=mmPmNezjCi0"
+  },
+  {
+    "index": 4,
+    "video_id": "VqB8zMujdjM",
+    "title": "AI Agent (3/3): AI Agent 對於工作帶來的衝擊 - 以學術研究為例",
+    "duration": 1436,
+    "url": "https://www.youtube.com/watch?v=VqB8zMujdjM"
+  },
+  {
+    "index": 5,
+    "video_id": "vXb2QYOUzl4",
+    "title": "加快語言模型生成速度 (1/2)：Flash Attention",
+    "duration": 2979,
+    "url": "https://www.youtube.com/watch?v=vXb2QYOUzl4"
+  },
+  {
+    "index": 6,
+    "video_id": "fDQaadKysSA",
+    "title": "加快語言模型生成速度 (2/2)：KV Cache",
+    "duration": 2314,
+    "url": "https://www.youtube.com/watch?v=fDQaadKysSA"
+  },
+  {
+    "index": 7,
+    "video_id": "Ll-wk8x3G_g",
+    "title": "如何讓 Transformer 知道輸入 Token 的順序？Absolute、Relative、RoPE、到沒有 Positional Embedding",
+    "duration": 5383,
+    "url": "https://www.youtube.com/watch?v=Ll-wk8x3G_g"
+  },
+  {
+    "index": 8,
+    "video_id": "R6fZR_9kmIw",
+    "title": "Harness Engineering：有時候語言模型不是不夠聰明，只是沒有人類好好引導",
+    "duration": 5541,
+    "url": "https://www.youtube.com/watch?v=R6fZR_9kmIw"
+  },
+  {
+    "index": 9,
+    "video_id": "m3i2mk5hs8U",
+    "title": "AI 能自我修正嗎？從 decoding、workflow 到 reasoning 的技術發展整理",
+    "duration": 5262,
+    "url": "https://www.youtube.com/watch?v=m3i2mk5hs8U"
+  },
+  {
+    "index": 10,
+    "video_id": "s06mSAGN4gM",
+    "title": "AI 要跨越盧比孔河了嗎？自我成長的 AI 離我們多遠？",
+    "duration": 3825,
+    "url": "https://www.youtube.com/watch?v=s06mSAGN4gM"
+  }
+]

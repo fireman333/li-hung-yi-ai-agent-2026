@@ -1,0 +1,33 @@
+# Node / Astro
+site/node_modules/
+site/dist/
+site/.astro/
+site/.cache/
+site/.env*
+
+# Build artifacts (we whitelist the published PDF below)
+build/*
+!build/ai_agent_harness_engineering_self-correc-lecture-notes.pdf
+!build/.gitkeep
+
+# Skill pipeline state (regenerable, not part of the published site)
+.state/
+.skill-state.json
+__pycache__/
+*.pyc
+
+# Backups (skill-side renames + migrations)
+lectures.bak*/
+lectures/*.bak.md
+lectures/*.v1*.md*
+
+# OS / editor
+.DS_Store
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Misc
+.cursorrules
+*.log

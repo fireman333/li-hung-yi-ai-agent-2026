@@ -1,0 +1,135 @@
+---
+import { getCollection } from 'astro:content';
+
+const entries = await getCollection('docs');
+const lectures = entries
+  .filter((e) => typeof e.data.lectureNumber === 'number' && e.id !== 'index')
+  .sort((a, b) => (a.data.lectureNumber ?? 0) - (b.data.lectureNumber ?? 0));
+
+const fmtDate = (d?: Date) =>
+  d ? d.toISOString().slice(0, 10) : '';
+---
+
+<section class="lecture-grid">
+  {lectures.map((lec) => {
+    const num = lec.data.lectureNumber!;
+    const slug = lec.id;
+    const href = import.meta.env.BASE_URL.replace(/\/$/, '') + '/' + slug + '/';
+    const dur = lec.data.durationMin;
+    const read = lec.data.readingMin;
+    const youtube = lec.data.videoUrl;
+    const date = fmtDate(lec.data.uploadedAt as Date | undefined);
+    return (
+      <article class="lecture-card">
+        <div class="lecture-badge">Lec {String(num).padStart(2, '0')}</div>
+        <h3 class="lecture-title">
+          <a href={href}>{lec.data.title}</a>
+        </h3>
+        <p class="lecture-meta">
+          {dur ? <span>⏱ 影片 {dur} 分</span> : null}
+          {read ? <span>📖 閱讀 {read} 分</span> : null}
+          {date ? <span>🗓 {date}</span> : null}
+        </p>
+        <div class="lecture-actions">
+          <a class="cta-primary" href={href}>閱讀講義 →</a>
+          {youtube ? (
+            <a class="cta-secondary" href={youtube} target="_blank" rel="noopener">
+              ▶ YouTube
+            </a>
+          ) : null}
+        </div>
+      </article>
+    );
+  })}
+</section>
+
+{lectures.length === 0 ? (
+  <p class="empty-state">尚未匯入講義。請先把 <code>lectures/*.md</code> 補上 frontmatter（執行 <code>node scripts/migrate-frontmatter.mjs</code>）。</p>
+) : null}
+
+<style>
+  .lecture-grid {
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    margin: 2rem auto;
+    max-width: 1200px;
+    padding: 0 1rem;
+  }
+  .lecture-card {
+    border: 1px solid var(--sl-color-gray-5);
+    border-radius: 0.5rem;
+    padding: 1.25rem;
+    background: var(--sl-color-bg-nav);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .lecture-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+  .lecture-badge {
+    align-self: flex-start;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--sl-color-accent);
+    background: var(--sl-color-accent-low);
+    padding: 0.15rem 0.5rem;
+    border-radius: 0.25rem;
+  }
+  .lecture-title {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.4;
+  }
+  .lecture-title a {
+    color: var(--sl-color-white);
+    text-decoration: none;
+  }
+  .lecture-title a:hover {
+    color: var(--sl-color-accent);
+  }
+  .lecture-meta {
+    font-size: 0.85rem;
+    color: var(--sl-color-gray-3);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 0.25rem 0 0.75rem;
+  }
+  .lecture-actions {
+    margin-top: auto;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .cta-primary,
+  .cta-secondary {
+    text-decoration: none;
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 0.3rem;
+    transition: background 0.15s ease;
+  }
+  .cta-primary {
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+  }
+  .cta-primary:hover {
+    background: var(--sl-color-accent-high);
+  }
+  .cta-secondary {
+    border: 1px solid var(--sl-color-gray-5);
+    color: var(--sl-color-white);
+  }
+  .cta-secondary:hover {
+    background: var(--sl-color-gray-6);
+  }
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--sl-color-gray-3);
+  }
+</style>
