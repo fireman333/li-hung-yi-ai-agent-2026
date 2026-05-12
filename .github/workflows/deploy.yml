@@ -31,9 +31,27 @@ jobs:
         working-directory: site
         run: npm ci
 
-      - name: Install Playwright Chromium (for mermaid build-time rendering)
+      - name: Get Playwright version
+        id: pw
+        working-directory: site
+        run: echo "version=$(node -p "require('./node_modules/playwright/package.json').version")" >> $GITHUB_OUTPUT
+
+      - name: Cache Playwright browsers
+        id: playwright-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+
+      - name: Install Playwright Chromium (cache miss → full install)
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         working-directory: site
         run: npx playwright install --with-deps chromium
+
+      - name: Install Playwright OS deps only (cache hit)
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        working-directory: site
+        run: npx playwright install-deps chromium
 
       - name: Sync PDFs into site/public/pdf/
         run: node scripts/sync-pdfs.mjs
