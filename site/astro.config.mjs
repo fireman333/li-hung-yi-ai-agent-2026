@@ -17,8 +17,12 @@ export default defineConfig({
         src: './src/assets/logo.svg',
         alt: '課程筆記',
       },
-      defaultLocale: 'zh-tw',
-      locales: { 'zh-tw': { label: '繁體中文', lang: 'zh-TW' } },
+      // Single-locale site (zh-TW) served at the URL root. Using the literal
+      // `root` key (not the locale code as key) tells Starlight not to prefix
+      // routes with /zh-tw/, so the homepage logo / nav links land on `/` not
+      // `/zh-tw/` (avoids 404 on logo click).
+      defaultLocale: 'root',
+      locales: { root: { label: '繁體中文', lang: 'zh-TW' } },
       social: [
         {
           icon: 'github',
